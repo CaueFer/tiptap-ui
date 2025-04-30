@@ -1,0 +1,17 @@
+export { TextEditor } from "./editor";
+export { useEditor, type UseEditorOptions } from "@tiptap/react";
+export { FontSize, tiptapUISource } from "./extension";
+export { StarterKit } from "@tiptap/starter-kit";
+export { Link } from "@tiptap/extension-link";
+export { Table } from "@tiptap/extension-table";
+export { Italic } from "@tiptap/extension-italic";
+export { Strike } from "@tiptap/extension-strike";
+export { TableRow } from "@tiptap/extension-table-row";
+export { TaskList } from "@tiptap/extension-task-list";
+export { TaskItem } from "@tiptap/extension-task-item";
+export { Underline } from "@tiptap/extension-underline";
+export { Gapcursor } from "@tiptap/extension-gapcursor";
+export { TextAlign } from "@tiptap/extension-text-align";
+export { TableCell } from "@tiptap/extension-table-cell";
+export { TextStyle } from "@tiptap/extension-text-style";
+export { TableHeader } from "@tiptap/extension-table-header";
