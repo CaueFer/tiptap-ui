@@ -10,9 +10,12 @@ import {
   Bold,
   Code,
   EllipsisVertical,
+  Image,
   Italic,
   Link,
+  Minus,
   Strikethrough,
+  TableProperties,
   Underline,
 } from "lucide-react";
 
@@ -88,7 +91,6 @@ function EditMenuComponent({ editor }: EditMenuProps) {
 
       timeoutRef.current = setTimeout(() => {
         setRefresh((prev) => !prev);
-        console.log("atualizei");
 
         const fontSize = editor.getAttributes("textStyle").fontSize;
         if (!fontSize) {
@@ -118,7 +120,7 @@ function EditMenuComponent({ editor }: EditMenuProps) {
           }
         };
         appearLinkPopup();
-      }, 100);
+      }, 150);
     });
 
     return () => {
@@ -127,6 +129,31 @@ function EditMenuComponent({ editor }: EditMenuProps) {
   }, [editor, getSelectionPosition]);
 
   if (!editor) return null;
+
+  const validateExtensions = useCallback(
+    (editor: Editor) => {
+      const extensions = editor?.extensionManager.extensions;
+
+      return {
+        showBoldButton: extensions.some((ext) => ext.name === "bold"),
+        showItalicButton: extensions.some((ext) => ext.name === "italic"),
+        showUnderlineButton: extensions.some((ext) => ext.name === "underline"),
+        showStrikeButton: extensions.some((ext) => ext.name === "strike"),
+        showCodeButton: extensions.some((ext) => ext.name === "code"),
+        showTaskListButton: extensions.some((ext) => ext.name === "taskList"),
+        showAlignOptions:
+          extensions.find((ext) => ext.name === "textAlign")?.options || null,
+        showLinkButton: extensions.some((ext) => ext.name === "link"),
+        showTableButton: extensions.some((ext) => ext.name === "table"),
+        showHorizontalRuleButton: extensions.some(
+          (ext) => ext.name === "horizontalRule"
+        ),
+        showImageButton: extensions.some((ext) => ext.name === "image"),
+      };
+    },
+    [editor]
+  );
+  const extensionSettings = validateExtensions(editor);
 
   const handleBold = () => {
     editor.chain().focus().toggleBold().run();
@@ -274,6 +301,9 @@ function EditMenuComponent({ editor }: EditMenuProps) {
       case "table":
         editor.chain().focus().insertTable({ rows: 3, cols: 3 }).run();
         break;
+      case "horizontalRule":
+        editor.chain().focus().setHorizontalRule().run();
+        break;
       // case "image":
       //   editor
       //     .chain()
@@ -359,164 +389,199 @@ function EditMenuComponent({ editor }: EditMenuProps) {
             <Separator orientation="vertical" />
 
             {/* BOLD */}
-            <MenubarMenu>
-              <Button
-                onClick={handleBold}
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  " p-1 ",
-                  editor.isActive("bold") ? "bg-zinc-200 dark:bg-zinc-700" : ""
-                )}
-              >
-                <Bold />
-              </Button>
-            </MenubarMenu>
+            {extensionSettings.showBoldButton && (
+              <MenubarMenu>
+                <Button
+                  onClick={handleBold}
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    " p-1 ",
+                    editor.isActive("bold")
+                      ? "bg-zinc-200 dark:bg-zinc-700"
+                      : ""
+                  )}
+                >
+                  <Bold />
+                </Button>
+              </MenubarMenu>
+            )}
 
             {/* ITALIC */}
-            <MenubarMenu>
-              <Button
-                size="sm"
-                onClick={handleItalic}
-                variant="ghost"
-                className={cn(
-                  "cursor-pointer",
-                  editor.isActive("italic")
-                    ? "bg-zinc-200 dark:bg-zinc-700"
-                    : ""
-                )}
-              >
-                <Italic />
-              </Button>
-            </MenubarMenu>
+            {extensionSettings.showItalicButton && (
+              <MenubarMenu>
+                <Button
+                  size="sm"
+                  onClick={handleItalic}
+                  variant="ghost"
+                  className={cn(
+                    "cursor-pointer",
+                    editor.isActive("italic")
+                      ? "bg-zinc-200 dark:bg-zinc-700"
+                      : ""
+                  )}
+                >
+                  <Italic />
+                </Button>
+              </MenubarMenu>
+            )}
 
             {/* UNDERLINE */}
-            <MenubarMenu>
-              <Button
-                onClick={handleUnderline}
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "cursor-pointer",
-                  editor.isActive("underline")
-                    ? "bg-zinc-200 dark:bg-zinc-700"
-                    : ""
-                )}
-              >
-                <Underline />
-              </Button>
-            </MenubarMenu>
+            {extensionSettings.showUnderlineButton && (
+              <MenubarMenu>
+                <Button
+                  onClick={handleUnderline}
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "cursor-pointer",
+                    editor.isActive("underline")
+                      ? "bg-zinc-200 dark:bg-zinc-700"
+                      : ""
+                  )}
+                >
+                  <Underline />
+                </Button>
+              </MenubarMenu>
+            )}
 
             {/* STRIKE */}
-            <MenubarMenu>
-              <Button
-                onClick={handleStrikethrough}
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "cursor-pointer",
-                  editor.isActive("strike")
-                    ? "bg-zinc-200 dark:bg-zinc-700"
-                    : ""
-                )}
-              >
-                <Strikethrough />
-              </Button>
-            </MenubarMenu>
+            {extensionSettings.showStrikeButton && (
+              <MenubarMenu>
+                <Button
+                  onClick={handleStrikethrough}
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "cursor-pointer",
+                    editor.isActive("strike")
+                      ? "bg-zinc-200 dark:bg-zinc-700"
+                      : ""
+                  )}
+                >
+                  <Strikethrough />
+                </Button>
+              </MenubarMenu>
+            )}
 
             {/* CODE */}
-            <MenubarMenu>
-              <Button
-                onClick={handleCode}
-                variant="ghost"
-                size="sm"
-                className={cn(
-                  "cursor-pointer",
-                  editor?.isActive("code") ? "bg-zinc-200 dark:bg-zinc-700" : ""
-                )}
-              >
-                <Code />
-              </Button>
-            </MenubarMenu>
+            {extensionSettings.showCodeButton && (
+              <MenubarMenu>
+                <Button
+                  onClick={handleCode}
+                  variant="ghost"
+                  size="sm"
+                  className={cn(
+                    "cursor-pointer",
+                    editor?.isActive("code")
+                      ? "bg-zinc-200 dark:bg-zinc-700"
+                      : ""
+                  )}
+                >
+                  <Code />
+                </Button>
+              </MenubarMenu>
+            )}
 
             {/* ALIGN */}
-            <MenubarMenu>
-              <MenubarTrigger className="cursor-pointer">
-                <EllipsisVertical size={15} />
-              </MenubarTrigger>
-              <MenubarContent className="flex flex-row justify-around">
-                {/* ESQUERDA */}
-                <Tooltip>
-                  <TooltipTrigger>
-                    <MenubarItem onClick={() => handleAlign("left")}>
-                      <AlignLeft />
-                    </MenubarItem>
-                  </TooltipTrigger>
-                  <TooltipContent>Esquerda</TooltipContent>
-                </Tooltip>
+            {extensionSettings.showAlignOptions && (
+              <MenubarMenu>
+                <MenubarTrigger className="cursor-pointer">
+                  <EllipsisVertical size={15} />
+                </MenubarTrigger>
+                <MenubarContent className="flex flex-row justify-around">
+                  {/* ESQUERDA */}
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <MenubarItem onClick={() => handleAlign("left")}>
+                        <AlignLeft />
+                      </MenubarItem>
+                    </TooltipTrigger>
+                    <TooltipContent>Esquerda</TooltipContent>
+                  </Tooltip>
 
-                {/* CENTER */}
-                <Tooltip>
-                  <TooltipTrigger>
-                    <MenubarItem onClick={() => handleAlign("center")}>
-                      <AlignCenter />
-                    </MenubarItem>
-                  </TooltipTrigger>
-                  <TooltipContent>Centro</TooltipContent>
-                </Tooltip>
+                  {/* CENTER */}
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <MenubarItem onClick={() => handleAlign("center")}>
+                        <AlignCenter />
+                      </MenubarItem>
+                    </TooltipTrigger>
+                    <TooltipContent>Centro</TooltipContent>
+                  </Tooltip>
 
-                {/* DIREITA */}
-                <Tooltip>
-                  <TooltipTrigger>
-                    <MenubarItem onClick={() => handleAlign("right")}>
-                      <AlignRight />
-                    </MenubarItem>
-                  </TooltipTrigger>
-                  <TooltipContent>Direita</TooltipContent>
-                </Tooltip>
+                  {/* DIREITA */}
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <MenubarItem onClick={() => handleAlign("right")}>
+                        <AlignRight />
+                      </MenubarItem>
+                    </TooltipTrigger>
+                    <TooltipContent>Direita</TooltipContent>
+                  </Tooltip>
 
-                {/* JUSTIFY */}
-                <Tooltip>
-                  <TooltipTrigger>
-                    <MenubarItem onClick={() => handleAlign("justify")}>
-                      <AlignJustify />
-                    </MenubarItem>
-                  </TooltipTrigger>
-                  <TooltipContent>Justificar</TooltipContent>
-                </Tooltip>
+                  {/* JUSTIFY */}
+                  <Tooltip>
+                    <TooltipTrigger>
+                      <MenubarItem onClick={() => handleAlign("justify")}>
+                        <AlignJustify />
+                      </MenubarItem>
+                    </TooltipTrigger>
+                    <TooltipContent>Justificar</TooltipContent>
+                  </Tooltip>
 
-                {/* LINK */}
-                <Tooltip>
-                  <TooltipTrigger>
-                    <MenubarItem
-                      onClick={() => handleToogleLink()}
-                      className={cn(
-                        editor?.isActive("link")
-                          ? "bg-zinc-200 dark:bg-zinc-700"
-                          : ""
-                      )}
-                    >
-                      <Link />
-                    </MenubarItem>
-                  </TooltipTrigger>
-                  <TooltipContent>Link</TooltipContent>
-                </Tooltip>
-              </MenubarContent>
-            </MenubarMenu>
+                  {/* LINK */}
+                  {extensionSettings.showLinkButton && (
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <MenubarItem
+                          onClick={() => handleToogleLink()}
+                          className={cn(
+                            editor?.isActive("link")
+                              ? "bg-zinc-200 dark:bg-zinc-700"
+                              : ""
+                          )}
+                        >
+                          <Link />
+                        </MenubarItem>
+                      </TooltipTrigger>
+                      <TooltipContent>Link</TooltipContent>
+                    </Tooltip>
+                  )}
+                </MenubarContent>
+              </MenubarMenu>
+            )}
 
             <Separator orientation="vertical" />
 
-            {/* EXPORTAR */}
+            {/* INSERIR */}
             <MenubarMenu>
               <MenubarTrigger>Inserir</MenubarTrigger>
               <MenubarContent>
+                {extensionSettings.showTableButton && (
+                  <MenubarItem
+                    className="cursor-pointer"
+                    onClick={() => handleInsertItem("table")}
+                  >
+                    <TableProperties /> Tabela
+                  </MenubarItem>
+                )}
+
+                {extensionSettings.showImageButton && (
+                  <MenubarItem
+                    className="cursor-pointer"
+                    onClick={() => handleInsertItem("image")}
+                  >
+                    <Image /> Imagem
+                  </MenubarItem>
+                )}
+
                 <MenubarItem
                   className="cursor-pointer"
-                  onClick={() => handleInsertItem("table")}
+                  onClick={() => handleInsertItem("horizontalRule")}
                 >
-                  Tabela
+                  <Minus /> Linha Horizontal
                 </MenubarItem>
-                <MenubarItem>Imagem</MenubarItem>
               </MenubarContent>
             </MenubarMenu>
 
