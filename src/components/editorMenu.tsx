@@ -550,4 +550,4 @@ function EditMenuComponent({ editor }: EditMenuProps) {
   );
 }
 
-export const EditMenu = React.memo(EditMenuComponent);
+export const EditorMenu = React.memo(EditMenuComponent);

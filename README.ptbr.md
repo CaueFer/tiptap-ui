@@ -19,8 +19,6 @@
 
 ```bash
 npm install tiptap-ui
-# ou
-yarn add tiptap-ui
 ```
 
 ### 3. Configuração
@@ -57,6 +55,17 @@ const editor = useEditor({
 });
 ```
 
+Exemplo de uso do componente:
+
+```tsx
+return (
+  <div className="min-h-screen w-full bg-muted">
+    <EditorMenu editor={editor} />
+    <EditorContent editor={editor} className="h-full" />;
+  </div>
+);
+```
+
 > Para mais opções veja: [Configurações Adicionais](#-configuracoes-adicionais)
 
 ---
@@ -75,7 +84,18 @@ Durante a instalação, você poderá configurar:
 
 > ⚠️ Certifique-se de que o Tailwind está configurado corretamente no seu projeto React (seja Vite, Next.js, CRA etc).
 
-### 2. Pronto Shadcn Instalado!
+### 2. Configure o Tailwind
+
+No seu principal arquivo CSS (por exemplo: styles.css ou main.css):
+
+```css
+@import "tailwindcss";
+
+/*  tiptap-ui support to tailwind */
+@source "../node_modules/tiptap-ui/dist/**/*.{js,jsx,ts,tsx}";
+```
+
+### 3. Pronto Shadcn Instalado!
 
 > Próximos passos [Instalar Tiptap-ui](#2-instale-o-tiptap-ui).
 

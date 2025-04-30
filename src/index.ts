@@ -1,4 +1,5 @@
-export { TextEditor } from "./editor";
+export { EditorContent } from "./editor";
+export { EditorMenu } from "./components/editorMenu";
 export { useEditor, type UseEditorOptions } from "@tiptap/react";
 export { FontSize, tiptapUISource } from "./extension";
 export { StarterKit } from "@tiptap/starter-kit";

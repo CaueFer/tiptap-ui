@@ -1,6 +1,8 @@
 .tiptap {
   background: white;
 
+  user-select: text;
+  pointer-events: auto;
   min-height: 100%;
 }
 
@@ -12,6 +14,11 @@
 :is(.dark .ProseMirror .is-empty):before {
   --tw-text-opacity: 1;
   color: rgb(163 163 163 / var(--tw-text-opacity));
+}
+
+:is(.dark .ProseMirror *)::selection,
+:is(.dark .ProseMirror .selection) {
+  background-color: hsla(0, 0%, 100%, 0.2);
 }
 
 .ProseMirror [data-type="column"] > :first-child,
